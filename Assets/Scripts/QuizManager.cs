@@ -31,17 +31,16 @@ public class QuizManager : MonoBehaviour
         playAudioForQuestion();
     }
 
-    public void correct()
+    public void correcto()
     {
         if (QnA.Count > 0)
         {
-            currentQuestion = (currentQuestion + 1) % QnA.Count; // Increment currentQuestion for the next iteration
+            currentQuestion = (currentQuestion + 1) % QnA.Count; 
             generateQuestion();
             playAudioForQuestion();
         }
         else
         {
-            // Handle the case where there are no more questions
             SceneManager.LoadScene("Fin");
         }
     }

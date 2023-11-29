@@ -12,7 +12,7 @@ public class AnswerScript : MonoBehaviour
         if (isCorrect)
         {
             Debug.Log("Correct answer!");
-            quizManager.correct();
+            quizManager.correcto();
         }
 
 
@@ -20,6 +20,6 @@ public class AnswerScript : MonoBehaviour
         {
             Debug.Log("Incorrect answer!");
 
-        }
+        } 
     }
 }

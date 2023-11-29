@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class QuizManager : MonoBehaviour
 {
@@ -12,90 +13,109 @@ public class QuizManager : MonoBehaviour
     public Text QuestionTxt;
 
 
-    //audios
-    public AudioSource source;
+    public AudioSource questionAudioSource;
 
     public AudioClip pregunta1;
     public AudioClip pregunta2;
     public AudioClip pregunta3;
-
-    public AudioSource Q1;
-    public AudioSource Q2;
-    public AudioSource Q3;
-
+    public AudioClip pregunta4;
+    public AudioClip pregunta5;
+    public AudioClip pregunta6;
+    public AudioClip pregunta7;
+    public AudioClip pregunta8;
+    public AudioClip pregunta9;
 
     private void Start()
     {
         generateQuestion();
+        playAudioForQuestion();
     }
 
     public void correct()
     {
-        QnA.RemoveAt(currentQuestion);
-        generateQuestion();
+        if (QnA.Count > 0)
+        {
+            currentQuestion = (currentQuestion + 1) % QnA.Count; // Increment currentQuestion for the next iteration
+            generateQuestion();
+            playAudioForQuestion();
+        }
+        else
+        {
+            // Handle the case where there are no more questions
+            SceneManager.LoadScene("Fin");
+        }
     }
 
-    void loop()
+    void playAudioForQuestion()
     {
-        if (currentQuestion == 1)
+        if (currentQuestion >= 0 && currentQuestion < QnA.Count)
         {
-            /*source.clip = pregunta1;
-            source.Play();*/
+            AudioClip[] questionAudioClips = { pregunta1, pregunta2, pregunta3, pregunta4, pregunta5, pregunta6, pregunta7, pregunta8, pregunta9}; // hay q agregar todos los audios 1 x 1
 
-            Q1.Play();
-
+            AudioClip audioClip = questionAudioClips[currentQuestion];
+            if (audioClip != null)
+            {
+                questionAudioSource.clip = audioClip;
+                questionAudioSource.Play();
+            }
         }
-
-        else if (currentQuestion == 2)
+        else
         {
-            /*source.clip = pregunta2;
-            source.Play();*/
-            Q2.Play();
-
+            Debug.Log("Invalid question index!");
         }
-
-        else if (currentQuestion == 3)
-        {
-            /*source.clip = pregunta3;
-           source.Play();*/
-            Q3.Play();
-
-        }
-
-
     }
+
+
+    //cambia las respuestas en base a las preguntas
     void SetAnswers()
     {
-
-        for (int i = 0; i <= options.Length; i++)
+        for (int i = 0; i < options.Length; i++)
         {
             options[i].GetComponent<AnswerScript>().isCorrect = false;
             options[i].transform.GetChild(0).GetComponent<Text>().text = QnA[currentQuestion].Answers[i];
 
-            if(QnA[currentQuestion].CorrectAnswer == i + 1) 
+            if (QnA[currentQuestion].CorrectAnswer == i)
             {
                 options[i].GetComponent<AnswerScript>().isCorrect = true;
             }
         }
-
-    
     }
 
     void generateQuestion()
     {
-        currentQuestion = Random.Range(0, QnA.Count);
-
-        QuestionTxt.text = QnA[currentQuestion].Question;
-        SetAnswers();
-
-        QnA.RemoveAt(currentQuestion);
+        if (QnA.Count > 0)
+        {
+            QuestionTxt.text = QnA[currentQuestion].Question;
+            SetAnswers();
+        }
+        else
+        {
+            SceneManager.LoadScene("Fin");
+        }
     }
 
-    private void OnMouseDown()
-    {
-        
-            
 
+
+
+
+    public void Boton()
+    {
+        // se fija si el indice de current question es valido
+        if (currentQuestion >= 0 && currentQuestion < QnA.Count)
+        {
+            AudioClip[] questionAudioClips = { pregunta1, pregunta2, pregunta3, pregunta4, pregunta5, pregunta6, pregunta7, pregunta8, pregunta9}; // tambien hay que agregarlos aca
+
+            AudioClip audioClip = questionAudioClips[currentQuestion];
+            if (audioClip != null)
+            {
+                questionAudioSource.clip = audioClip;
+                questionAudioSource.Play();
+            }
+        }
+        else
+        {
+            Debug.Log("Invalid question index!");
+        }
     }
 
 
